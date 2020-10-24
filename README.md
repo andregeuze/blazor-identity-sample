@@ -27,9 +27,10 @@ dotnet sln add BlazorIdentity.Server
 
 ### Add dependencies to the project
 
-Install the tools:
+Install the tools used in this sample:
 
 ```powershell
+dotnet tool install -g dotnet-ef
 dotnet tool install -g dotnet-aspnet-codegenerator
 ```
 
@@ -67,6 +68,13 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 }
+```
+
+Create an initial migration and run it:
+
+```powershell
+dotnet ef migrations add InitialSchema -o "Data/Migrations"
+dotnet ef database update
 ```
 
 ### Setup other required classes before scaffolding
