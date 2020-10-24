@@ -112,6 +112,7 @@ namespace BlazorIdentity.Server
                     options.UseAspNetCore();
                 });
 
+            services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
