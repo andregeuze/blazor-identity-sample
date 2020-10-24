@@ -331,5 +331,6 @@ ASALocalRun/
 
 # ---------------------------------------------------------------------------------
 # Custom
-*.Development.json
 .tye/
+*.Development.json
+*.db
