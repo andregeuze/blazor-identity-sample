@@ -40,3 +40,9 @@ dotnet add package Microsoft.AspNetCore.Identity.UI
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 dotnet add package Microsoft.EntityFrameworkCore.Tools
 ```
+
+### Scaffold all the Identity files
+Run:
+```powershell
+dotnet aspnet-codegenerator identity -dc BlazorIdentity.Server.Data.AppDbContext -sqlite --files "Account.Register;Account.Login;Account.Logout;Account.ResetPassword"
+```
