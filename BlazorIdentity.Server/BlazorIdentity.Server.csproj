@@ -11,6 +11,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="3.0.0-beta5.20503.76" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.0.0-beta5.20503.76" />
   </ItemGroup>
 
 </Project>

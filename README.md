@@ -46,3 +46,10 @@ Run:
 ```powershell
 dotnet aspnet-codegenerator identity -dc BlazorIdentity.Server.Data.AppDbContext -sqlite --files "Account.Register;Account.Login;Account.Logout;Account.ResetPassword"
 ```
+
+### Add dependencies for OpenIddict
+```powershell
+dotnet add package OpenIddict.AspNetCore -v 3.0.0-beta5.20503.76
+dotnet add package OpenIddict.EntityFrameworkCore -v 3.0.0-beta5.20503.76
+```
+
