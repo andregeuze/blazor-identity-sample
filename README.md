@@ -10,7 +10,7 @@ In this sample we will be using:
 - [OpenIddict Core](https://github.com/openiddict/openiddict-core)
 - [OpenIddict Samples](https://github.com/openiddict/openiddict-samples)
 
-## Steps to run through this sample/tutorial
+# Steps to run through this sample/tutorial
 
 ### Create the solution file
 
@@ -195,6 +195,71 @@ app.UseEndpoints(endpoints =>
 
 ### Scaffold all the Identity files
 
+Use for only these pages:
+
 ```powershell
 dotnet aspnet-codegenerator identity -dc BlazorIdentity.Server.Data.AppDbContext -sqlite --files "Account.Register;Account.Login;Account.Logout;Account.ResetPassword"
+```
+
+Use to scaffold ALL Identity pages:
+
+```powershell
+dotnet aspnet-codegenerator identity -dc BlazorIdentity.Server.Data.AppDbContext -sqlite
+```
+
+Apply --force to regenerate.
+
+### First Test !
+
+Open the url to check your OpenID specification:
+
+```
+https://localhost:5001/.well-known/openid-configuration
+```
+
+# Let's continue!
+
+### Create a redirect component
+
+Create component /Shared/RedirectToLogin.cs:
+
+```csharp
+public class RedirectToLogin : ComponentBase
+{
+    [Inject] NavigationManager NavigationManager { get; set; }
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+    }
+}
+```
+
+Create a login display component in /Shared/LoginDisplay.razor:
+
+```html
+<AuthorizeView>
+  <Authorized>
+    <a href="authentication/profile">Hello, @context.User.Identity.Name!</a>
+    <button class="nav-link btn btn-link" @onclick="BeginSignOut">
+      Log out
+    </button>
+  </Authorized>
+  <NotAuthorized>
+    <a href="authentication/login">Log in</a>
+  </NotAuthorized>
+</AuthorizeView>
+```
+
+```csharp
+@code{
+    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+
+    private void BeginSignOut(MouseEventArgs args)
+    {
+        //await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+}
 ```

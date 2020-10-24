@@ -9,6 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenIddict.Abstractions;
+using OpenIddict.Core;
+using OpenIddict.EntityFrameworkCore.Models;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace BlazorIdentity.Server
@@ -148,6 +154,51 @@ namespace BlazorIdentity.Server
 
                 //endpoints.MapFallbackToFile("index.html"); // Enable for Blazor WASM
             });
+
+            InitializeAsync(app.ApplicationServices, CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken)
+        {
+            // Create a new service scope to ensure the database context is correctly disposed when this methods returns.
+            using var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+
+            var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication>>();
+
+            // Dev / Test Client
+            if (await manager.FindByClientIdAsync("BBB84B82-F440-4222-8C32-E0E030496828") is null)
+            {
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "BBB84B82-F440-4222-8C32-E0E030496828",
+                    ConsentType = ConsentTypes.Explicit,
+                    DisplayName = "Blazor client application",
+                    Type = ClientTypes.Public,
+                    PostLogoutRedirectUris =
+                    {
+                        new Uri("https://localhost:5001/authentication/logout-callback")
+                    },
+                    RedirectUris =
+                    {
+                        new Uri("https://localhost:5001/authentication/login-callback")
+                    },
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Authorization,
+                        Permissions.Endpoints.Logout,
+                        Permissions.Endpoints.Token,
+                        Permissions.GrantTypes.AuthorizationCode,
+                        Permissions.GrantTypes.RefreshToken,
+                        Permissions.Scopes.Email,
+                        Permissions.Scopes.Profile,
+                        Permissions.Scopes.Roles
+                    },
+                    Requirements =
+                    {
+                        Requirements.Features.ProofKeyForCodeExchange
+                    }
+                });
+            }
         }
     }
 }
