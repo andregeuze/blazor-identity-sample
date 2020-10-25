@@ -70,14 +70,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 }
 ```
 
-Create an initial migration and run it:
-
-```powershell
-dotnet ef migrations add InitialSchema -o "Data/Migrations"
-dotnet ef database update
-```
-
-### Setup other required classes before scaffolding
+### Setup other required classes
 
 Create /Services/EmailSender.cs:
 
@@ -191,6 +184,15 @@ app.UseEndpoints(endpoints =>
     endpoints.MapBlazorHub(); // Enable For Blazor Server only
     endpoints.MapFallbackToPage("/_Host"); // Enable For Blazor Server only
 });
+```
+
+### Set up the database (Sqlite)
+
+Create an initial migration and run it:
+
+```powershell
+dotnet ef migrations add InitialSchema -o "Data/Migrations"
+dotnet ef database update
 ```
 
 ### Scaffold all the Identity files
