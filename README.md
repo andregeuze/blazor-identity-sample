@@ -232,7 +232,7 @@ public class RedirectToLogin : ComponentBase
 
     protected override void OnInitialized()
     {
-        NavigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+        NavigationManager.NavigateTo($"Identity/Account/Login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}", true);
     }
 }
 ```
@@ -240,28 +240,29 @@ public class RedirectToLogin : ComponentBase
 Create a login display component in /Shared/LoginDisplay.razor:
 
 ```html
+@using Microsoft.AspNetCore.Components.Authorization @inject NavigationManager
+Navigation
+
 <AuthorizeView>
   <Authorized>
-    <a href="authentication/profile">Hello, @context.User.Identity.Name!</a>
-    <button class="nav-link btn btn-link" @onclick="BeginSignOut">
-      Log out
-    </button>
+    <a href="Identity/Account/Manage/Index">
+      Hello, @context.User.Identity.Name!
+    </a>
+    <form action="/Identity/Account/Logout?returnUrl=%2F" method="post">
+      <button class="nav-link btn btn-link" type="submit">Logout</button>
+    </form>
   </Authorized>
   <NotAuthorized>
-    <a href="authentication/login">Log in</a>
+    <a href="Identity/Account/Login">Login</a>
   </NotAuthorized>
 </AuthorizeView>
 ```
 
-```csharp
-@code{
-    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
-    [Inject] NavigationManager Navigation { get; set; }
+Add the Login Display to MainLayout.razor:
 
-    private void BeginSignOut(MouseEventArgs args)
-    {
-        //await SignOutManager.SetSignOutState();
-        Navigation.NavigateTo("authentication/logout");
-    }
-}
+```html
+<div class="top-row px-4">
+  <LoginDisplay />
+  <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+</div>
 ```

@@ -9,8 +9,7 @@ namespace BlazorIdentity.Server.Shared
 
         protected override void OnInitialized()
         {
-            NavigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+            NavigationManager.NavigateTo($"Identity/Account/Login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}", true);
         }
     }
-
 }
